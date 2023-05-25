@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    padding: 0 10px;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#products--list {
+    display: flex;
+    margin: 20px 0;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.products--type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: orange;
+}
+
+.products--type:hover {
+    cursor: pointer;
+    background-color: rgb(175, 115, 4);
+    transition: .3s;
+}
+.search--sort {
+    margin-top: 20px;
+    text-align: center;
+}
+input, button, select {
+    font-size: 18px;
+}
+input {
+    margin-right: 10px;
+}
+select {
+    margin-left: 20px;
+}
+#products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.products__box {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 48px 0 rgba(0, 0, 0, 0.186);
+}
+
+.box__img{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background-position: center;
+}
+
+.box__sale {
+    position: absolute;
+    color: white;
+    top: 5px;
+    right: 10px;
+    font-size: 16px;
+    background-color: orange;
+    padding: 3px;
+    border-radius: 4px ;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.box__bottom {
+    padding: 5px 7px;
+}
+
+.box__bottom .title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.box__bottom .status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box__bottom .status__price {
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
+}
+
+.box__bottom .status__remain {
+    font-size: 14px;
+}
+
+.btn-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#btn__pre, #btn__next {
+    background-color: orange;
+    border-radius: 5px;
+    padding: 3px 10px;
+}
+
+#btn__pre:hover, #btn__next:hover {
+    cursor: pointer;
+    background-color: rgb(175, 115, 4);
+    transition: .3s;
+}
