@@ -2,13 +2,13 @@ import { fetchApi } from "./fetchApi.js";
 import { params } from "./params.js";
 const productsList = document.querySelector('#products--list');
 let products = document.querySelector('#products');
-let myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+let myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
 let prev = document.querySelector('#btn__pre');
 let next = document.querySelector('#btn__next');
 let pageNum = document.querySelector('#page--num');
 const myArr = [];
 // Product type
-fetchApi("http://localhost:3000/products")
+fetchApi("https://products-list-two.vercel.app/products")
 .then(data => {
   data.map((item) => {
     let check = 1;
@@ -28,7 +28,7 @@ fetchApi("http://localhost:3000/products")
       item.addEventListener('click', () => {
         products.innerHTML = "";
         params.category = item.innerHTML;
-        myApi = `http://localhost:3000/products?_page=1&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+        myApi = `https://products-list-two.vercel.app/products?_page=1&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
         params.page = 1;
         pageNum.innerHTML = 1;
         fetchApi(myApi)
@@ -61,8 +61,8 @@ let find = document.querySelector('button');
 find.addEventListener('click', () => {
   params.q = input.value;
   if(params.category != "")
-    myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-  else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+  else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
   products.innerHTML = "";
   fetchApi(myApi)
   .then(data => {
@@ -90,35 +90,35 @@ find.addEventListener('click', () => {
 let select = document.querySelector('select');
 select.addEventListener('change', (e) => {
   products.innerHTML = "";
-  if(e.target.value == 'default') myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&category=${params.category}`;
+  if(e.target.value == 'default') myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&category=${params.category}`;
   else {
     if(e.target.value == 'asc-price') {
       params.sort = 'price';
       params.order = 'asc';
       if(params.category != "")
-        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+        myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     }
     else if(e.target.value =='desc-price') {
       params.sort = 'price';
       params.order = 'desc';
       if(params.category != "")
-        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+        myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     }
     else if(e.target.value =='asc-stock') {
       params.sort = 'stock';
       params.order = 'asc';
       if(params.category != "")
-        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+        myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     }
     else if(e.target.value =='desc-dc') {
       params.sort = 'discountPercentage';
       params.order = 'desc';
       if(params.category != "")
-        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+        myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     }
   }
   fetchApi(myApi)
@@ -149,8 +149,8 @@ prev.addEventListener('click', () => {
     params.page--;
     pageNum.innerHTML = params.page;
     if(params.category != "")
-      myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-    else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+      myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+    else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     products.innerHTML = "";
     fetchApi(myApi)
     .then(data => {
@@ -181,8 +181,8 @@ next.addEventListener('click', () => {
     params.page++;
     pageNum.innerHTML = params.page;
     if(params.category != "")
-      myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-    else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+      myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+    else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
     products.innerHTML = "";
     fetchApi(myApi)
     .then(data => {
