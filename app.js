@@ -1,79 +1,19 @@
 import { fetchApi } from "./fetchApi.js";
+import { params } from "./params.js";
 const productsList = document.querySelector('#products--list');
-let currentPage = 1;
-let myCurrentCategory = '';
 let products = document.querySelector('#products');
-let myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18`;
+let myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
 let prev = document.querySelector('#btn__pre');
 let next = document.querySelector('#btn__next');
+let pageNum = document.querySelector('#page--num');
 const myArr = [];
-let select = document.querySelector('select');
-select.addEventListener('change', (e) => {
-  products.innerHTML = "";
-  if(e.target.value == 'default') myApi = `http://localhost:3000/products?_page=1&_limit=18`
-  else {
-    if(e.target.value == 'asc-price')
-      myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18&_sort=price&_order=asc`
-    else if(e.target.value =='desc-price') myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18&_sort=price&_order=desc`
-    else if(e.target.value =='asc-stock') myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18&_sort=stock&_order=asc`
-    else if(e.target.value =='desc-dc') myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18&_sort=discountPercentage&_order=desc`
-  }
-  fetchApi(myApi)
-  .then(data => {
-    data.map((item) => {
-      const box = document.createElement('div');
-      box.classList.add('products__box');
-      box.innerHTML = `
-        <div class="box__img">
-          <img src="${item.thumbnail}">
-          <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-        </div>
-        <div class="box__bottom">
-          <div class="title">${item.title}</div>
-          <div class="status">
-            <div class="status__price">${item.price}$</div>
-            <div class="status__remain">Còn lại: ${item.stock}</div>
-          </div>
-        </div>
-      `
-      products.appendChild(box);
-    })
-  })
-})
-let input = document.querySelector('#search');
-let find = document.querySelector('button');
-find.addEventListener('click', () => {
-  console.log(input.value);
-  myApi = `http://localhost:3000/products?_page=1&_limit=18&q=${input.value}`;
-  products.innerHTML = "";
-  fetchApi(myApi)
-  .then(data => {
-    data.map((item) => {
-      const box = document.createElement('div');
-      box.classList.add('products__box');
-      box.innerHTML = `
-        <div class="box__img">
-          <img src="${item.thumbnail}">
-          <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-        </div>
-        <div class="box__bottom">
-          <div class="title">${item.title}</div>
-          <div class="status">
-            <div class="status__price">${item.price}$</div>
-            <div class="status__remain">Còn lại: ${item.stock}</div>
-          </div>
-        </div>
-      `
-      products.appendChild(box);
-    })
-  })
-})
+// Product type
 fetchApi("http://localhost:3000/products")
-  .then(data => {
-    data.map((item) => {
-      let check = 1;
-      myArr.forEach((stuff) => {
-        if(stuff == item.category) check = 0;
+.then(data => {
+  data.map((item) => {
+    let check = 1;
+    myArr.forEach((stuff) => {
+      if(stuff == item.category) check = 0;
       })
       if(check === 1){ 
         myArr.push(item.category);
@@ -87,8 +27,10 @@ fetchApi("http://localhost:3000/products")
     type.forEach((item) => {
       item.addEventListener('click', () => {
         products.innerHTML = "";
-        myApi = `http://localhost:3000/products?category=${item.innerHTML}`;
-        myCurrentCategory = item.innerHTML;
+        params.category = item.innerHTML;
+        myApi = `http://localhost:3000/products?_page=1&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+        params.page = 1;
+        pageNum.innerHTML = 1;
         fetchApi(myApi)
         .then(data => {
           data.map((item) => {
@@ -98,26 +40,29 @@ fetchApi("http://localhost:3000/products")
               <div class="box__img">
                 <img src="${item.thumbnail}">
                 <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-              </div>
-              <div class="box__bottom">
+                </div>
+                <div class="box__bottom">
                 <div class="title">${item.title}</div>
                 <div class="status">
-                  <div class="status__price">${item.price}$</div>
-                  <div class="status__remain">Còn lại: ${item.stock}</div>
+                <div class="status__price">${item.price}$</div>
+                <div class="status__remain">Còn lại: ${item.stock}</div>
                 </div>
-              </div>
-            `
-            products.appendChild(box);
-          })
+                </div>
+                `
+                products.appendChild(box);
+            })
         })
       })
     })
   })
-prev.addEventListener('click', () => {
-  if(currentPage == 2) {
-  currentPage--;
-  myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18`;
-  if(myCurrentCategory != '') myApi += `&${myCurrentCategory}`;
+// Search
+let input = document.querySelector('#search');
+let find = document.querySelector('button');
+find.addEventListener('click', () => {
+  params.q = input.value;
+  if(params.category != "")
+    myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+  else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
   products.innerHTML = "";
   fetchApi(myApi)
   .then(data => {
@@ -140,37 +85,127 @@ prev.addEventListener('click', () => {
       products.appendChild(box);
     })
   })
+})
+// Filter
+let select = document.querySelector('select');
+select.addEventListener('change', (e) => {
+  products.innerHTML = "";
+  if(e.target.value == 'default') myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&category=${params.category}`;
+  else {
+    if(e.target.value == 'asc-price') {
+      params.sort = 'price';
+      params.order = 'asc';
+      if(params.category != "")
+        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    }
+    else if(e.target.value =='desc-price') {
+      params.sort = 'price';
+      params.order = 'desc';
+      if(params.category != "")
+        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    }
+    else if(e.target.value =='asc-stock') {
+      params.sort = 'stock';
+      params.order = 'asc';
+      if(params.category != "")
+        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    }
+    else if(e.target.value =='desc-dc') {
+      params.sort = 'discountPercentage';
+      params.order = 'desc';
+      if(params.category != "")
+        myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+      else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    }
+  }
+  fetchApi(myApi)
+  .then(data => {
+    data.map((item) => {
+      const box = document.createElement('div');
+      box.classList.add('products__box');
+      box.innerHTML = `
+        <div class="box__img">
+          <img src="${item.thumbnail}">
+          <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
+        </div>
+        <div class="box__bottom">
+          <div class="title">${item.title}</div>
+          <div class="status">
+            <div class="status__price">${item.price}$</div>
+            <div class="status__remain">Còn lại: ${item.stock}</div>
+          </div>
+        </div>
+      `
+      products.appendChild(box);
+    })
+  })
+})
+// Pagination
+prev.addEventListener('click', () => {
+  if(params.page == 2) {
+    params.page--;
+    pageNum.innerHTML = params.page;
+    if(params.category != "")
+      myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+    else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    products.innerHTML = "";
+    fetchApi(myApi)
+    .then(data => {
+      data.map((item) => {
+        const box = document.createElement('div');
+        box.classList.add('products__box');
+        box.innerHTML = `
+          <div class="box__img">
+            <img src="${item.thumbnail}">
+            <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
+          </div>
+          <div class="box__bottom">
+            <div class="title">${item.title}</div>
+            <div class="status">
+              <div class="status__price">${item.price}$</div>
+              <div class="status__remain">Còn lại: ${item.stock}</div>
+            </div>
+          </div>
+        `
+        products.appendChild(box);
+      })
+    })
   }
 })
 
 next.addEventListener('click', () => {
-  if(currentPage == 1) {
-  currentPage++;
-  myApi = `http://localhost:3000/products?_page=${currentPage}&_limit=18`;
-  if(myCurrentCategory != '') myApi += `&${myCurrentCategory}`;
-  products.innerHTML = "";
-  fetchApi(myApi)
-  .then(data => {
-    data.map((item) => {
-      const box = document.createElement('div');
-      box.classList.add('products__box');
-      box.innerHTML = `
-        <div class="box__img">
-          <img src="${item.thumbnail}">
-          <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-        </div>
-        <div class="box__bottom">
-          <div class="title">${item.title}</div>
-          <div class="status">
-            <div class="status__price">${item.price}$</div>
-            <div class="status__remain">Còn lại: ${item.stock}</div>
+  if(params.page == 1) {
+    params.page++;
+    pageNum.innerHTML = params.page;
+    if(params.category != "")
+      myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+    else myApi = `http://localhost:3000/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    products.innerHTML = "";
+    fetchApi(myApi)
+    .then(data => {
+      data.map((item) => {
+        const box = document.createElement('div');
+        box.classList.add('products__box');
+        box.innerHTML = `
+          <div class="box__img">
+            <img src="${item.thumbnail}">
+            <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
           </div>
-        </div>
-      `
-      products.appendChild(box);
+          <div class="box__bottom">
+            <div class="title">${item.title}</div>
+            <div class="status">
+              <div class="status__price">${item.price}$</div>
+              <div class="status__remain">Còn lại: ${item.stock}</div>
+            </div>
+          </div>
+        `
+        products.appendChild(box);
+      })
     })
-  })
-}
+  }
 })
 fetchApi(myApi)
   .then(data => {
