@@ -61,8 +61,8 @@ let find = document.querySelector('button');
 find.addEventListener('click', () => {
   params.q = input.value;
   if(params.category != "")
-    myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-  else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+  else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}`;
   products.innerHTML = "";
   fetchApi(myApi)
   .then(data => {
@@ -90,7 +90,11 @@ find.addEventListener('click', () => {
 let select = document.querySelector('select');
 select.addEventListener('change', (e) => {
   products.innerHTML = "";
-  if(e.target.value == 'default') myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&category=${params.category}`;
+  if(e.target.value == 'default') {
+    if(params.category != "")
+      myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&category=${params.category}`;
+    else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}`;
+  }
   else {
     if(e.target.value == 'asc-price') {
       params.sort = 'price';
@@ -154,6 +158,7 @@ prev.addEventListener('click', () => {
     products.innerHTML = "";
     fetchApi(myApi)
     .then(data => {
+      next.classList.remove('hidden');
       data.map((item) => {
         const box = document.createElement('div');
         box.classList.add('products__box');
@@ -179,31 +184,38 @@ prev.addEventListener('click', () => {
 next.addEventListener('click', () => {
   if(params.page == 1) {
     params.page++;
-    pageNum.innerHTML = params.page;
     if(params.category != "")
       myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
     else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
-    products.innerHTML = "";
     fetchApi(myApi)
     .then(data => {
-      data.map((item) => {
-        const box = document.createElement('div');
-        box.classList.add('products__box');
-        box.innerHTML = `
-          <div class="box__img">
-            <img src="${item.thumbnail}">
-            <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-          </div>
-          <div class="box__bottom">
-            <div class="title">${item.title}</div>
-            <div class="status">
-              <div class="status__price">${item.price}$</div>
-              <div class="status__remain">Còn lại: ${item.stock}</div>
+      if(data.length != 0) {
+        products.innerHTML = ""
+        pageNum.innerHTML = params.page;
+        next.classList.add('hidden');
+        prev.classList.remove('hidden');
+        data.map((item) => {
+          const box = document.createElement('div');
+          box.classList.add('products__box');
+          box.innerHTML = `
+            <div class="box__img">
+              <img src="${item.thumbnail}">
+              <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
             </div>
-          </div>
-        `
-        products.appendChild(box);
-      })
+            <div class="box__bottom">
+              <div class="title">${item.title}</div>
+              <div class="status">
+                <div class="status__price">${item.price}$</div>
+                <div class="status__remain">Còn lại: ${item.stock}</div>
+              </div>
+            </div>
+          `
+          products.appendChild(box);
+        })
+      }
+      else {
+        params.page--;
+      }
     })
   }
 })

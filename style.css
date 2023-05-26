@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.hidden {
+    display: none !important;
+}
+
 body {
     padding: 0 10px;
 }
