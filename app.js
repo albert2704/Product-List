@@ -5,6 +5,7 @@ let products = document.querySelector('#products');
 let myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
 let prev = document.querySelector('#btn__pre');
 let next = document.querySelector('#btn__next');
+let input = document.querySelector('#search');
 let pageNum = document.querySelector('#page--num');
 const myArr = [];
 // Product type
@@ -36,10 +37,12 @@ fetchApi("https://products-list-two.vercel.app/products")
           prev.classList.add('hidden');
         }
         else {
-          myApi = `https://products-list-two.vercel.app/products?_page=1&_limit=18&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+          myApi = `https://products-list-two.vercel.app/products?_page=1&_limit=18&_sort=${params.sort}&_order=${params.order}`;
           params.page = 1;
           pageNum.innerHTML = 1;
           params.all = 1;
+          params.q= '';
+          input.value = "";
           next.classList.remove('hidden');
           document.querySelector('#page--num').classList.remove('hidden');
         }
@@ -74,35 +77,42 @@ fetchApi("https://products-list-two.vercel.app/products")
     })
   })
 // Search
-let input = document.querySelector('#search');
 let find = document.querySelector('button');
 find.addEventListener('click', () => {
   params.q = input.value;
-  if(params.category != "")
-    myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
-  else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}`;
-  products.innerHTML = "";
-  fetchApi(myApi)
-  .then(data => {
-    data.map((item) => {
-      const box = document.createElement('div');
-      box.classList.add('products__box');
-      box.innerHTML = `
-        <div class="box__img">
-          <img src="${item.thumbnail}">
-          <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
-        </div>
-        <div class="box__bottom">
-          <div class="title">${item.title}</div>
-          <div class="status">
-            <div class="status__price">${item.price}$</div>
-            <div class="status__remain">Còn lại: ${item.stock}</div>
+  if(input.value != '') {
+    params.page = 1;
+    if(params.category != "")
+      myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
+    else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&title_like=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    products.innerHTML = "";
+    fetchApi(myApi)
+    .then(data => {
+      if(data.length < 18) {
+        next.classList.add('hidden');
+        prev.classList.add('hidden');
+        document.querySelector('#page--num').classList.add('hidden');
+      }
+      data.map((item) => {
+        const box = document.createElement('div');
+        box.classList.add('products__box');
+        box.innerHTML = `
+          <div class="box__img">
+            <img src="${item.thumbnail}">
+            <div class="box__sale">${Math.round(item.discountPercentage)}%</div>
           </div>
-        </div>
-      `
-      products.appendChild(box);
+          <div class="box__bottom">
+            <div class="title">${item.title}</div>
+            <div class="status">
+              <div class="status__price">${item.price}$</div>
+              <div class="status__remain">Còn lại: ${item.stock}</div>
+            </div>
+          </div>
+        `
+        products.appendChild(box);
+      })
     })
-  })
+  }
 })
 // Filter
 let select = document.querySelector('select');
@@ -205,6 +215,7 @@ next.addEventListener('click', () => {
     if(params.category != "" && params.all == 0)
       myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}&category=${params.category}`;
     else myApi = `https://products-list-two.vercel.app/products?_page=${params.page}&_limit=${params.limit}&q=${params.q}&_sort=${params.sort}&_order=${params.order}`;
+    console.log(myApi);
     fetchApi(myApi)
     .then(data => {
       if(data.length != 0) {
