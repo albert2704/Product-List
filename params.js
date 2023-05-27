@@ -5,5 +5,5 @@ export let params = {
     limit: "18",
     q: "",
     category: "",
-    total: 0,
+    all: 0,
 };
