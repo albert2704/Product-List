@@ -176,6 +176,8 @@ select.addEventListener('change', (e) => {
   })
 })
 // Pagination
+
+// Previous
 prev.addEventListener('click', () => {
   if(params.page == 2) {
     params.page--;
@@ -209,6 +211,7 @@ prev.addEventListener('click', () => {
   }
 })
 
+// Next
 next.addEventListener('click', () => {
   if(params.page == 1) {
     params.page++;
@@ -248,6 +251,7 @@ next.addEventListener('click', () => {
     })
   }
 })
+// Default
 fetchApi(myApi)
   .then(data => {
     next.classList.remove('hidden');
