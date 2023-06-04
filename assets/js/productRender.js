@@ -21,6 +21,9 @@ export let productRender = (api) => {
                 `;
             });
             if(data.length < 18) next.style.display = "none";
+            else {
+                next.style.display = "block";
+            }
             if(params.page == 1) prev.style.display = "none";
             document.querySelector('#products').innerHTML = productsArr.join("");
         })

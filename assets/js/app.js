@@ -30,6 +30,8 @@ input.addEventListener('keydown', (e) => {
 // Filter
 let select = document.querySelector('select');
 select.addEventListener('change', (e) => {
+  params.page = 1;
+  pageNum.innerHTML = 1;
   switch (e.target.value) {
     case 'default':
       params.sort = '';
