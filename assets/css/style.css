@@ -3,10 +3,6 @@
     padding: 0;
 }
 
-.hidden {
-    display: none !important;
-}
-
 body {
     padding: 0 10px;
 }
@@ -121,7 +117,12 @@ img {
     justify-content: center;
     margin-top: 20px;
 }
-
+#page--num {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: blanchedalmond;
+}
 #btn__pre, #btn__next {
     background-color: orange;
     border-radius: 5px;
